@@ -1,8 +1,6 @@
 const axios = require('axios');
 const express = require('express');
-const {Type} = require("../db");
-
-
+const { Type } = require("../db");
 
 const getTypes = async (req, res) => {
   try {
@@ -10,22 +8,28 @@ const getTypes = async (req, res) => {
     const response = await axios.get('https://pokeapi.co/api/v2/type');
     const typesFromAPI = response.data.results;
 
-    // Guardar los tipos en la base de datos (solo si aún no están guardados)
-   // Guardar los tipos en la base de datos (solo si aún no están guardados)
-await Promise.all(
-  typesFromAPI.map(async (type) => {
-    // Verificar si el tipo ya existe en la base de datos
-    const existingType = await Type.findOne({ where: { name: type.name } });
-
-    if (!existingType) {
-      await Type.create({
-        name: type.name,
-      });
-    }
-  })
-);
-
     // Obtener todos los tipos de la base de datos
+    const allDbTypes = await Type.findAll();
+
+    // Crear un conjunto de nombres de tipos en la base de datos (insensible a mayúsculas y minúsculas)
+    const dbTypeNamesSet = new Set(allDbTypes.map(dbType => dbType.name.toLowerCase()));
+
+    // Filtrar los tipos de la API para evitar duplicados y tipos ya existentes
+    const uniqueTypes = typesFromAPI.filter(type => {
+      const typeName = type.name.toLowerCase();
+      return !dbTypeNamesSet.has(typeName);
+    });
+
+    // Guardar los tipos únicos en la base de datos
+    await Promise.all(
+      uniqueTypes.map(async (type) => {
+        await Type.create({
+          name: type.name,
+        });
+      })
+    );
+
+    // Obtener todos los tipos de la base de datos después de la inserción
     const allTypes = await Type.findAll();
 
     res.status(200).json(allTypes);
@@ -34,8 +38,8 @@ await Promise.all(
   }
 };
 
-
 module.exports = {
   getTypes,
 };
+
 

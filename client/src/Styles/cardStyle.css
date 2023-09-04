@@ -1,0 +1,55 @@
+/* Estilos para el componente Card */
+.card {
+    display: inline-block;
+    width: calc(33.33% - 20px);
+    margin: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    /* Color de fondo de la tarjeta */
+}
+
+.card img {
+    max-width: 100%;
+    /* Asegura que la imagen se ajuste al ancho de la tarjeta */
+    height: auto;
+    /* Mantiene la proporción de aspecto de la imagen */
+}
+
+.card h3 {
+    margin-top: 10px;
+    /* Espacio superior para el título */
+    font-size: 18px;
+    /* Tamaño de fuente más grande para el título */
+}
+
+.card ul {
+    list-style: none;
+    /* Elimina los marcadores de lista */
+    padding: 0;
+    /* Elimina el espacio interno de la lista */
+}
+
+.card li {
+    margin: 5px 0;
+    /* Espacio entre elementos de la lista */
+}
+
+/* Estilos para hacer responsiva la cantidad de tarjetas por fila */
+@media (max-width: 1200px) {
+    .card {
+        width: calc(50% - 20px);
+        /* Mostrar dos tarjetas por fila en pantalla mediana */
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: calc(100% - 20px);
+        /* Mostrar una tarjeta por fila en pantalla pequeña */
+    }
+}
