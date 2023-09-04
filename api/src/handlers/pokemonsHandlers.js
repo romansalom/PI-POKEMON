@@ -131,44 +131,70 @@ const getAllPokemons = async (req, res) => {
 };
 
 
-const getPokemonsById = async(req,res)=>
-{
-    const idPokemon = req.params.idPokemon;
-    try {
-        // Buscar el Pokémon en la base de datos
-       
-        if (!UUID(idPokemon)) {
-            // Si encontramos el Pokémon en la base de datos, lo devolvemos
-            const pokemonTypes = await dbPokemon.getTypes();
+const getPokemonsById = async (req, res) => {
+  const id = req.params.idPokemon;
 
-            const dbPokemon = await Pokemon.findOne({ where: { id: idPokemon } });
+  try {
+    if (isNumeric(id)) {
+      // Si el ID es numérico, busca en la API
+      const pokeApiResponse = await axios.get(`${URL}/${id}`);
+      const poke = pokeApiResponse.data;
 
-            res.status(200).json(dbPokemon);
-        } else {
-            // Si no encontramos el Pokémon en la base de datos, buscamos en la PokeAPI
-            const pokeApiResponse = await axios.get(`${URL}/${idPokemon}`);
-            const poke = pokeApiResponse.data;
-            const typeResponse = await axios.get(poke.types[0].type.url);
-      const spanisTypeName = typeResponse.data.names.find((types) => types.language.name === 'es').name;
+      // Obtén los tipos de la API
+      const types = poke.types.map((typeData) => typeData.type.name);
 
-            const attack = poke.stats.find(obj => obj.stat.name === 'attack');
-            const defense = poke.stats.find(obj => obj.stat.name === 'defense');
-            const hp = poke.stats.find(obj => obj.stat.name === 'hp');
+      // Resto del código para procesar los datos de la API
+      const pokemonInfo = {
+        id: poke.id,
+        name: poke.name,
+        types: types, // Asigna los tipos obtenidos de la API
+        // otros datos del Pokémon
+      };
 
-            const newPokemon = await Pokemon.create({
-                name: poke.name,
-                image: poke.sprites.front_default,
-                health: hp.base_stat,
-                attack: attack.base_stat,
-                defense: defense.base_stat,
-                types: spanisTypeName
-            });
+      res.status(200).json(pokemonInfo);
+    } else if (isValidUUID(id)) {
+      // Si el ID es un UUID válido, busca en la base de datos
+      const dbPokemon = await Pokemon.findOne({ where: { id }, include: Type });
 
-            res.status(200).json(newPokemon);
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Hubo un error al obtener al Pokémon", error: error.message });
+      if (dbPokemon) {
+        // Obtén los tipos de la base de datos
+        const types = dbPokemon.Types.map((type) => ({
+          id: type.id,
+          name: type.name,
+        }));
+
+        // Devuelve el Pokémon con sus tipos
+        res.status(200).json({
+          id: dbPokemon.id,
+          name: dbPokemon.name,
+          health : dbPokemon.health,
+          attack : dbPokemon.attack,
+          defense: dbPokemon.defense,
+          image: dbPokemon.image,
+          
+          types: types, // Asigna los tipos obtenidos de la base de datos
+          // otros datos del Pokémon
+        });
+      } else {
+        res.status(404).json({ message: "No se encontró el Pokémon en la base de datos" });
+      }
+    } else {
+      res.status(400).json({ message: "El formato del ID no es válido" });
     }
+  } catch (error) {
+    res.status(500).json({ message: "Hubo un error al obtener el Pokémon", error: error.message });
+  }
+};
+
+
+function isNumeric(value) {
+  // Función para verificar si un valor es numérico
+  return /^\d+$/.test(value);
+}
+
+function isValidUUID(value) {
+  // Función para verificar si un valor es un UUID válido
+  return /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/.test(value);
 }
 
 

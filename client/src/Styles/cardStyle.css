@@ -1,7 +1,8 @@
 /* Estilos para el componente Card */
 .card {
-    display: inline-block;
+    display: inline-table;
     width: calc(33.33% - 20px);
+    height: 400px;
     margin: 10px;
     padding: 10px;
     box-sizing: border-box;
@@ -16,7 +17,9 @@
 .card img {
     max-width: 100%;
     /* Asegura que la imagen se ajuste al ancho de la tarjeta */
-    height: auto;
+    max-height: 60%;
+    /* Establece una altura máxima para las imágenes */
+    object-fit: contain;
     /* Mantiene la proporción de aspecto de la imagen */
 }
 
