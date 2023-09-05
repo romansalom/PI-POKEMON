@@ -135,24 +135,7 @@ const getPokemonsById = async (req, res) => {
   const id = req.params.idPokemon;
 
   try {
-    if (isNumeric(id)) {
-      // Si el ID es numérico, busca en la API
-      const pokeApiResponse = await axios.get(`${URL}/${id}`);
-      const poke = pokeApiResponse.data;
-
-      // Obtén los tipos de la API
-      const types = poke.types.map((typeData) => typeData.type.name);
-
-      // Resto del código para procesar los datos de la API
-      const pokemonInfo = {
-        id: poke.id,
-        name: poke.name,
-        types: types, // Asigna los tipos obtenidos de la API
-        // otros datos del Pokémon
-      };
-
-      res.status(200).json(pokemonInfo);
-    } else if (isValidUUID(id)) {
+    if (isValidUUID(id)) {
       // Si el ID es un UUID válido, busca en la base de datos
       const dbPokemon = await Pokemon.findOne({ where: { id }, include: Type });
 
@@ -171,7 +154,6 @@ const getPokemonsById = async (req, res) => {
           attack : dbPokemon.attack,
           defense: dbPokemon.defense,
           image: dbPokemon.image,
-          
           types: types, // Asigna los tipos obtenidos de la base de datos
           // otros datos del Pokémon
         });
@@ -185,47 +167,42 @@ const getPokemonsById = async (req, res) => {
     res.status(500).json({ message: "Hubo un error al obtener el Pokémon", error: error.message });
   }
 };
-
-
-function isNumeric(value) {
-  // Función para verificar si un valor es numérico
-  return /^\d+$/.test(value);
-}
-
 function isValidUUID(value) {
   // Función para verificar si un valor es un UUID válido
   return /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/.test(value);
 }
 
-
 const getPokemonsByName = async (req, res) => {
-  const name = req.query.name;
+  const name = req.params.namePokemon; // Cambiar req.query a req.params
 
   // Convertir el nombre a minúsculas para comparación insensible a mayúsculas
   const lowercaseName = name.toLowerCase();
-
   try {
-    // Buscar el pokémon en la API
-    const apiResponse = await axios.get(`${URL}/${lowercaseName}`);
-    const apiPokemon = apiResponse.data;
+    // Buscar el pokémon en la base de datos por nombre (insensible a mayúsculas y minúsculas)
+    const dbPokemon = await Pokemon.findOne({
+      where: {
+        name: {
+          [Op.iLike]: lowercaseName,
+        },
+      },
+      include: Type,
+    });
 
-    // Mapear la información que necesitas del pokémon
-    const pokemonInfo = {
-      id: apiPokemon.id,
-      name: apiPokemon.name,
-      image: apiPokemon.sprites.front_default,
-      types: apiPokemon.types.map((typeData) => typeData.type.name),
-    };
-
-    // Devolver la información del pokémon
-    console.log('Búsqueda exitosa:', pokemonInfo);
-    res.status(200).json(pokemonInfo);
+    if (dbPokemon) {
+      // Si el Pokémon está en la base de datos, devuelve sus detalles
+      res.status(200).json(dbPokemon);
+    } else {
+      // Si no se encuentra en la base de datos, devuelve un mensaje de error
+      res.status(404).json({ message: "No se encontró el Pokémon en la base de datos" });
+    }
   } catch (error) {
     // Manejar el error
     console.error('Error al buscar el pokémon:', error);
     res.status(500).send("Hubo un error al buscar el pokémon: " + error.message);
   }
 };
+
+
 
 
 

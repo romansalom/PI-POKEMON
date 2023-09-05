@@ -11,7 +11,7 @@ const pokemonRouter = Router();
 
 pokemonRouter.get("/", getAllPokemons);
 pokemonRouter.get("/:idPokemon", getPokemonsById);
-pokemonRouter.get("/:namePokemon", getPokemonsByName);
+pokemonRouter.get("/nombre/:namePokemon", getPokemonsByName);
 pokemonRouter.post("/",createPokemon)
 
 
