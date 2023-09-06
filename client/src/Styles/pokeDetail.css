@@ -1,0 +1,45 @@
+/* Estilos para el componente PokemonDetail */
+.card {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    /* Ancho de la tarjeta */
+    height: 400px;
+    /* Alto de la tarjeta */
+    margin: 100 auto;
+    /* Centrar horizontalmente */
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    background-color: #f9f9f9;
+}
+
+.card img {
+    max-width: 100%;
+    max-height: 60%;
+    object-fit: contain;
+}
+
+.card h3 {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.card li {
+    margin: 5px 0;
+}
+
+.card p {
+    margin: 5px 0;
+}
