@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SearchBar from './SearchBar';
 import { Link } from 'react-router-dom'; // Importa Link
 import axios from 'axios';
+import '../Styles/navbarStyle.css';
 
 const NavBar = () => {
   const [pokemonDetails, setPokemonDetails] = useState(null);
@@ -13,12 +14,15 @@ const NavBar = () => {
   };
 
   return (
-    <div>
-      <SearchBar onSearchResult={handleSearchResult} />
-      {/* Agrega un enlace (Link) a la página de inicio (Home) */}
-      <Link to="/home">Home</Link>
-    </div>
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/home" className="navbar-item">Home</Link>
+        <Link to='/form' className="navbar-item">Crea tu Pokémon</Link>
+        <SearchBar onSearchResult={handleSearchResult} />
+      </div>
+    </nav>
   );
 };
 
 export default NavBar;
+

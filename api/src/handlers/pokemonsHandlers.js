@@ -206,7 +206,7 @@ const getPokemonsByName = async (req, res) => {
 
 
 
- const createPokemon = async (req, res) => {
+const createPokemon = async (req, res) => {
   try {
     const { name, image, health, attack, defense, typeIds } = req.body;
 
@@ -221,6 +221,19 @@ const getPokemonsByName = async (req, res) => {
     // Verificar si todos los typeIds proporcionados son válidos
     if (validTypeIds.length !== typeIds.length) {
       return res.status(400).json({ message: 'Alguno de los typeIds proporcionados no es válido.' });
+    }
+
+    // Verificar si ya existe un Pokémon con el mismo nombre (insensible a mayúsculas/minúsculas)
+    const existingPokemon = await Pokemon.findOne({
+      where: {
+        name: {
+          [Op.iLike]: name // El operador iLike hace la comparación insensible a mayúsculas/minúsculas
+        }
+      }
+    });
+
+    if (existingPokemon) {
+      return res.status(400).json({ message: 'Ya existe un Pokémon con el mismo nombre.' });
     }
 
     // Crear el nuevo Pokémon en la tabla de Pokemons

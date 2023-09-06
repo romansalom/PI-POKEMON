@@ -1,0 +1,54 @@
+/* Estilos para el formulario */
+/* Estilos para el formulario */
+.form-container {
+    max-width: 400px;
+    margin: 100px auto;
+    /* Aumenta el margen superior para separarlo de la barra de navegación */
+    padding: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el encabezado */
+.form-container h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilos para las etiquetas de los campos */
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Estilos para los campos de entrada de texto */
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Estilos para el botón */
+.form-container button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #0056b3;
+}

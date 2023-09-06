@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage'; // Importa tu componente Lan
 import Home from './components/Home'; // Importa tu componente Home
 import NavBar from './components/NavBar'; // Importa tu componente NavBar
 import PokemonDetail from './components/PokemonDetail'; 
+ import CreatePokemonForm from '../src/components/Form'
 
 function App() {
   const { pathname } = useLocation();
@@ -11,6 +12,8 @@ function App() {
 
   const handleSearchResult = (results) => {
     setSearchResults(results);}
+
+    
   return (
     <div className="App">
       {pathname !== '/' && <NavBar onSearchResult={handleSearchResult}   />}
@@ -19,8 +22,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/home" element={<Home />} />
           <Route path="/pokemon/:id" element={<PokemonDetail />} />
-          
-          
+          <Route path="/form" element = {<CreatePokemonForm />}  />   
+
         </Routes>
       
     </div>
