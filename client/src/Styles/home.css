@@ -1,0 +1,49 @@
+/* styles/home.css */
+
+.home-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.home-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.home-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.home-sort-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.home-select {
+    width: 200px;
+}
+
+.home-sort-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.home-message {
+    font-size: 18px;
+    color: #ff0000;
+}
+
+/* Estilos responsivos para pantallas pequeñas */
+@media (max-width: 768px) {
+    .home-select {
+        width: 100%;
+    }
+}

@@ -1,8 +1,5 @@
-
-// Cards.js
 import React from 'react';
 import Card from './Card';
-
 
 const Cards = ({ pokemons }) => {
   return (
@@ -16,11 +13,10 @@ const Cards = ({ pokemons }) => {
           health={pokemon.health}
           attack={pokemon.attack}
           defense={pokemon.defense}
-          types={pokemon.types}
+          types={pokemon.types} // Asegúrate de que types contenga los tipos asociados
         />
       ))}
     </div>
   );
 };
-
 export default Cards;

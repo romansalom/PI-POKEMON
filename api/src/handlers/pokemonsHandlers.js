@@ -8,7 +8,7 @@ const { Op } = require('sequelize');
 
 const getAllPokemons = async (req, res) => {
   try {
-    const response = await axios(`${URL}?limit=50`);
+    const response = await axios(`${URL}?limit=100`);
     const allPokemonsAPI = response.data.results;
 
     // Obtener todos los tipos de la base de datos
