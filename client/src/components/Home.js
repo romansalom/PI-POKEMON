@@ -13,6 +13,8 @@ function Home() {
   const [error, setError] = useState(null); // Mensaje de error
   const [sortDirection, setSortDirection] = useState('asc'); // Dirección de ordenamiento
   const [sortBy, setSortBy] = useState('name'); // Campo por el que se ordena
+  const [currentPage, setCurrentPage] = useState(1); // Página actual
+  const pokemonPerPage = 12; // Número de Pokémones por página
 
   useEffect(() => {
     // Inicia la carga de datos
@@ -40,10 +42,10 @@ function Home() {
         console.error('Error al obtener los tipos de Pokémon:', error);
       });
   }, []);
-
   const handleTypeChange = (selectedOption) => {
     setSelectedType(selectedOption.value);
     setSelectedTypeName(selectedOption.label);
+    setCurrentPage(1); // Vuelve a la página 1 al cambiar el tipo
   };
 
   // Agrega una opción adicional para "TODOS LOS POKÉMONES" en typeOptions
@@ -55,6 +57,29 @@ function Home() {
     })),
   ];
 
+  // Función para manejar el cambio de dirección de ordenamiento
+  const handleSortDirectionChange = () => {
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  };
+
+  const handleSortByChange = (selectedOption) => {
+    setSortBy(selectedOption.value);
+    setCurrentPage(1); // Vuelve a la página 1 al cambiar el campo de ordenamiento
+  };
+  // Función para cambiar la página actual a la siguiente
+  const nextPage = () => {
+    if (currentPage < Math.ceil(filteredPokemons.length / pokemonPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Función para cambiar la página actual a la anterior
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   // Filtra los Pokémon según el tipo seleccionado
   const filteredPokemons = selectedType === null
     ? pokemons
@@ -62,15 +87,9 @@ function Home() {
         pokemon.types.some((type) => type.id === selectedType)
       );
 
-  // Función para manejar el cambio de dirección de ordenamiento
-  const handleSortDirectionChange = () => {
-    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  };
-
-  // Función para manejar el cambio de campo por el que se ordena
-  const handleSortByChange = (selectedOption) => {
-    setSortBy(selectedOption.value);
-  };
+  // Calcula el índice de inicio y fin para la paginación
+  const startIndex = (currentPage - 1) * pokemonPerPage;
+  const endIndex = startIndex + pokemonPerPage;
 
   // Función para ordenar los Pokémon según el estado actual de ordenamiento
   const sortedPokemons = [...filteredPokemons].sort((a, b) => {
@@ -82,6 +101,12 @@ function Home() {
     }
     return 0; // Orden predeterminado
   });
+
+  // Obtiene los Pokémones para la página actual
+  const paginatedPokemons = sortedPokemons.slice(startIndex, endIndex);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(filteredPokemons.length / pokemonPerPage);
 
   return (
     <div className="home-container">
@@ -119,22 +144,43 @@ function Home() {
         />
       </div>
 
-      {/* Muestra un mensaje de carga */}
-      {loading && <p className="home-message">Cargando...</p>}
-
-      {/* Muestra un mensaje de error si se produce un error */}
-      {error && <p className="home-message">{error}</p>}
-
       {/* Renderiza el componente Cards y muestra un mensaje de error si no se encuentran Pokémon */}
       {!loading && !error && (
-        <div>
-          {sortedPokemons.length > 0 ? (
-            <Cards pokemons={sortedPokemons} />
+        <div className="home-card-container">
+          {paginatedPokemons.length > 0 ? (
+            <Cards pokemons={paginatedPokemons} />
           ) : (
             <p className="home-message">No se encontraron Pokémon del tipo "{selectedTypeName}".</p>
           )}
         </div>
       )}
+
+      {/* Paginación numerada */}
+      <div className="home-pagination">
+        <button onClick={prevPage} className="home-pagination-button">
+          Anterior
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i + 1)}
+            className={`home-pagination-button ${
+              i + 1 === currentPage ? 'active' : ''
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button onClick={nextPage} className="home-pagination-button">
+          Siguiente
+        </button>
+      </div>
+
+      {/* Muestra un mensaje de carga */}
+      {loading && <p className="home-message">Cargando...</p>}
+
+      {/* Muestra un mensaje de error si se produce un error */}
+      {error && <p className="home-message">{error}</p>}
     </div>
   );
 }
