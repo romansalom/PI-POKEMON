@@ -27,19 +27,22 @@ function PokemonDetail() {
   if (!pokemonData) {
     return <div>Cargando...</div>;
   }
-  
-  const { name, image, health, attack, defense, types } = pokemonData;
-  
+
+  const { name, image, health, attack, defense, types, speed, height, weight } = pokemonData;
+
   return (
     <div className="card">
       <img src={image} alt={name} onError={() => console.error('Error al cargar la imagen')} />
-      
-        <h3>{name}</h3>
-     
+
+      <h3>{name}</h3>
+
       <ul>
         <p>Health: {health}</p>
         <p>Attack: {attack}</p>
         <p>Defense: {defense}</p>
+        <p>Speed: {speed}</p>
+        <p>Height: {height} m</p>
+        <p>Weight: {weight} kg</p>
         <p>Types:</p>
         <ul>
           {types.map((type) => (

@@ -1,0 +1,23 @@
+/* Establece el fondo de pantalla con la URL deseada y ajusta la imagen al tamaño de la pantalla */
+.landing-page {
+    background-image: url('https://free4kwallpapers.com/uploads/originals/2015/07/22/pokemon-fondo-de-pantalla.jpg');
+    background-size: cover;
+    /* Ajusta la imagen para que cubra todo el elemento */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* Fija la imagen de fondo para que no se desplace con el contenido */
+    background-position: center center;
+    /* Centra la imagen en el elemento */
+    height: 100vh;
+    /* Establece la altura al 100% del viewport */
+}
+
+/* Estilos adicionales para el contenido */
+.landing-content {
+    text-align: center;
+    color: rgb(255, 250, 250);
+    /* Color del texto para que se vea en contraste con el fondo */
+    padding: 20px;
+}
+
+/* Puedes ajustar los estilos de .landing-content según tus preferencias */

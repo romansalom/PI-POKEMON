@@ -1,12 +1,11 @@
-
 import React from 'react';
-import { Link } from 'react-router-dom'; // Si estás utilizando React Router
-
+import { Link } from 'react-router-dom';
+import '../Styles/landing.css';
 const LandingPage = () => {
   return (
     <div className="landing-page">
       <div className="background-image">
-        {/* Aquí puedes agregar una imagen de fondo */}
+        {/* Esta es la imagen de fondo */}
       </div>
       <div className="landing-content">
         <h1>Bienvenido a nuestra aplicación Pokémon</h1>

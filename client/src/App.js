@@ -6,6 +6,7 @@ import NavBar from './components/NavBar'; // Importa tu componente NavBar
 import PokemonDetail from './components/PokemonDetail'; 
  import CreatePokemonForm from '../src/components/Form'
 
+
 function App() {
   const { pathname } = useLocation();
   const [searchResults, setSearchResults] = useState([]);
@@ -23,6 +24,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/pokemon/:id" element={<PokemonDetail />} />
           <Route path="/form" element = {<CreatePokemonForm />}  />   
+          
 
         </Routes>
       

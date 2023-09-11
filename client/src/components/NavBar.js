@@ -19,7 +19,7 @@ const NavBar = () => {
       <div className="navbar-container">
         <Link to="/home" className="navbar-item" >Home</Link>
         <Link to='/form' className="navbar-item">Crea tu Pokémon</Link>
-        <Link to='/formBorrar' className="navbar-item">Borrar un Pokémon</Link>
+       
         <SearchBar onSearchResult={handleSearchResult} />
       </div>
     </nav>

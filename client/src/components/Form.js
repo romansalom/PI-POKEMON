@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Select from 'react-select'; // Importa Select de react-select
+import Select from 'react-select';
 import '../Styles/formstles.css';
 
 function CreatePokemonForm() {
@@ -10,14 +10,17 @@ function CreatePokemonForm() {
     health: '',
     attack: '',
     defense: '',
+    speed: '',
+    height: '',
+    weight: '',
     typeIds: [],
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    // Cargar tipos desde la base de datos
     async function loadTypes() {
       try {
-        const response = await fetch('http://localhost:3001/type'); // Reemplaza '/api/types' con la ruta correcta
+        const response = await fetch('http://localhost:3001/type');
         const typesData = await response.json();
         setTypes(typesData);
       } catch (error) {
@@ -37,26 +40,72 @@ function CreatePokemonForm() {
   };
 
   const handleTypeChange = (selectedOptions) => {
-    const selectedTypeIds = selectedOptions.map((option) => option.value); // Obtiene los IDs de los tipos seleccionados
+    const selectedTypeIds = selectedOptions.map((option) => option.value);
     setFormData({
       ...formData,
       typeIds: selectedTypeIds,
     });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (formData.name.trim() === '') {
+      newErrors.name = 'El nombre es requerido';
+    }
+
+    if (formData.image.trim() === '') {
+      newErrors.image = 'La URL de la imagen es requerida';
+    } else if (!isValidUrl(formData.image)) {
+      newErrors.image = 'La URL de la imagen no es válida';
+    }
+
+    if (formData.health < 1) {
+      newErrors.health = 'La salud debe ser mayor o igual a 1';
+    }
+
+    if (formData.attack < 1) {
+      newErrors.attack = 'El ataque debe ser mayor o igual a 1';
+    }
+
+    if (formData.defense < 1) {
+      newErrors.defense = 'La defensa debe ser mayor o igual a 1';
+    }
+
+    if (formData.speed < 1) {
+      newErrors.speed = 'La velocidad debe ser mayor o igual a 1';
+    }
+
+    if (formData.height < 1) {
+      newErrors.height = 'La altura debe ser mayor o igual a 1';
+    }
+
+    if (formData.weight < 1) {
+      newErrors.weight = 'El peso debe ser mayor o igual a 1';
+    }
+
+    if (formData.typeIds.length === 0) {
+      newErrors.typeIds = 'Debe seleccionar al menos un tipo';
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validaciones
-    if (
-      formData.name.trim() === '' ||
-      formData.image.trim() === '' ||
-      formData.health < 0 ||
-      formData.attack < 0 ||
-      formData.defense < 0 ||
-      formData.typeIds.length === 0
-    ) {
-      alert('Por favor, completa los campos correctamente.');
+    if (!validateForm()) {
       return;
     }
 
@@ -77,6 +126,9 @@ function CreatePokemonForm() {
           health: '',
           attack: '',
           defense: '',
+          speed: '',
+          height: '',
+          weight: '',
           typeIds: [],
         });
       } else {
@@ -88,7 +140,6 @@ function CreatePokemonForm() {
     }
   };
 
-  // Mapea los tipos para convertirlos en el formato requerido por react-select
   const typeOptions = types.map((type) => ({
     value: type.id,
     label: type.name,
@@ -108,7 +159,47 @@ function CreatePokemonForm() {
           required
           pattern="[A-Za-z\s]+"
           title="Solo se permiten letras y espacios"
-        /><br />
+        />
+        <br />
+
+        <label htmlFor="speed">Velocidad:</label>
+        <input
+          type="number"
+          id="speed"
+          name="speed"
+          value={formData.speed}
+          onChange={handleInputChange}
+          required
+          min="1" // Cambiado de 0 a 1
+        />
+        {errors.speed && <div className="error">{errors.speed}</div>}
+        <br />
+
+        <label htmlFor="height">Altura:</label>
+        <input
+          type="number"
+          id="height"
+          name="height"
+          value={formData.height}
+          onChange={handleInputChange}
+          required
+          min="1" // Cambiado de 0 a 1
+        />
+        {errors.height && <div className="error">{errors.height}</div>}
+        <br />
+
+        <label htmlFor="weight">Peso:</label>
+        <input
+          type="number"
+          id="weight"
+          name="weight"
+          value={formData.weight}
+          onChange={handleInputChange}
+          required
+          min="1" // Cambiado de 0 a 1
+        />
+        {errors.weight && <div className="error">{errors.weight}</div>}
+        <br />
 
         <label htmlFor="image">URL de la imagen:</label>
         <input
@@ -118,7 +209,9 @@ function CreatePokemonForm() {
           value={formData.image}
           onChange={handleInputChange}
           required
-        /><br />
+        />
+        {errors.image && <div className="error">{errors.image}</div>}
+        <br />
 
         <label htmlFor="health">Salud:</label>
         <input
@@ -128,8 +221,10 @@ function CreatePokemonForm() {
           value={formData.health}
           onChange={handleInputChange}
           required
-          min="0"
-        /><br />
+          min="1" // Cambiado de 0 a 1
+        />
+        {errors.health && <div className="error">{errors.health}</div>}
+        <br />
 
         <label htmlFor="attack">Ataque:</label>
         <input
@@ -139,8 +234,10 @@ function CreatePokemonForm() {
           value={formData.attack}
           onChange={handleInputChange}
           required
-          min="0"
-        /><br />
+          min="1" // Cambiado de 0 a 1
+        />
+        {errors.attack && <div className="error">{errors.attack}</div>}
+        <br />
 
         <label htmlFor="defense">Defensa:</label>
         <input
@@ -150,8 +247,10 @@ function CreatePokemonForm() {
           value={formData.defense}
           onChange={handleInputChange}
           required
-          min="0"
-        /><br />
+          min="1" // Cambiado de 0 a 1
+        />
+        {errors.defense && <div className="error">{errors.defense}</div>}
+        <br />
 
         <label htmlFor="types">Tipo(s):</label>
         <Select
@@ -164,6 +263,7 @@ function CreatePokemonForm() {
           )}
           onChange={handleTypeChange}
         />
+        {errors.typeIds && <div className="error">{errors.typeIds}</div>}
         <br />
 
         <button type="submit">Crear Pokémon</button>

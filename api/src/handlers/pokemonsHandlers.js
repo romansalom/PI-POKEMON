@@ -11,14 +11,10 @@ const getAllPokemons = async (req, res) => {
     const response = await axios(`${URL}?limit=100`);
     const allPokemonsAPI = response.data.results;
 
-    // Obtener todos los tipos de la base de datos
-    const allTypes = await Type.findAll();
-
     const pokemonPromises = Promise.all(
       allPokemonsAPI.map(async (pokemonAPI) => {
         const pokemonNameAPI = pokemonAPI.name.toLowerCase();
 
-        // Buscar el Pokémon en la base de datos por nombre (insensible a mayúsculas y minúsculas)
         const dbPokemon = await Pokemon.findOne({
           where: {
             name: {
@@ -43,13 +39,18 @@ const getAllPokemons = async (req, res) => {
             })),
           };
         } else {
-          // Si no está en la base de datos, obtén los datos de la API y crea el nuevo Pokémon
           const apiResponse = await axios(`${URL}/${pokemonAPI.name}`);
           const poke = apiResponse.data;
 
           const attack = poke.stats.find((obj) => obj.stat.name === 'attack');
           const defense = poke.stats.find((obj) => obj.stat.name === 'defense');
           const hp = poke.stats.find((obj) => obj.stat.name === 'hp');
+
+          // Obtener los datos adicionales del Pokémon
+          const health = hp.base_stat;
+          const speed = poke.stats.find((obj) => obj.stat.name === 'speed').base_stat;
+          const height = poke.height;
+          const weight = poke.weight;
 
           // Get types for the Pokémon
           const types = [];
@@ -70,13 +71,16 @@ const getAllPokemons = async (req, res) => {
             types.push(typeInstance);
           }
 
-          // Crear el nuevo Pokémon en la tabla de Pokemons
+          // Crear el nuevo Pokémon en la tabla de Pokemons con los datos adicionales
           const newPokemon = await Pokemon.create({
             name: pokemonNameAPI,
             image: poke.sprites.front_default,
-            health: hp.base_stat,
+            health: health,
             attack: attack.base_stat,
             defense: defense.base_stat,
+            speed: speed, // Agregar velocidad
+            height: height, // Agregar altura
+            weight: weight, // Agregar peso
           });
 
           // Asociar los tipos al Pokémon
@@ -89,6 +93,9 @@ const getAllPokemons = async (req, res) => {
             health: newPokemon.health,
             attack: newPokemon.attack,
             defense: newPokemon.defense,
+            speed: newPokemon.speed, // Agregar velocidad
+            height: newPokemon.height, // Agregar altura
+            weight: newPokemon.weight, // Agregar peso
             types: types.map((type) => ({
               id: type.id,
               name: type.name,
@@ -99,6 +106,9 @@ const getAllPokemons = async (req, res) => {
     );
 
     const pokemons = await pokemonPromises;
+
+
+
 
     // Buscar los Pokémon en la base de datos y combinarlos con los obtenidos de la API
     const dbPokemons = await Pokemon.findAll({
@@ -146,13 +156,16 @@ const getPokemonsById = async (req, res) => {
           name: type.name,
         }));
 
-        // Devuelve el Pokémon con sus tipos
+        // Devuelve el Pokémon con sus tipos y las propiedades adicionales
         res.status(200).json({
           id: dbPokemon.id,
           name: dbPokemon.name,
-          health : dbPokemon.health,
-          attack : dbPokemon.attack,
+          health: dbPokemon.health,
+          attack: dbPokemon.attack,
           defense: dbPokemon.defense,
+          speed: dbPokemon.speed, // Agregar velocidad
+          height: dbPokemon.height, // Agregar altura
+          weight: dbPokemon.weight, // Agregar peso
           image: dbPokemon.image,
           types: types, // Asigna los tipos obtenidos de la base de datos
           // otros datos del Pokémon
@@ -167,6 +180,7 @@ const getPokemonsById = async (req, res) => {
     res.status(500).json({ message: "Hubo un error al obtener el Pokémon", error: error.message });
   }
 };
+
 function isValidUUID(value) {
   // Función para verificar si un valor es un UUID válido
   return /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/.test(value);
@@ -208,7 +222,7 @@ const getPokemonsByName = async (req, res) => {
 
 const createPokemon = async (req, res) => {
   try {
-    const { name, image, health, attack, defense, typeIds } = req.body;
+    const { name, image, health, attack, defense, typeIds,speed,height,weight } = req.body;
 
     // Verificar si typeIds es un arreglo válido de números enteros
     if (!Array.isArray(typeIds) || typeIds.some(id => typeof id !== 'number' || !Number.isInteger(id))) {
@@ -243,6 +257,10 @@ const createPokemon = async (req, res) => {
       health: health,
       attack: attack,
       defense: defense,
+      speed: speed, // Agregar velocidad
+      height: height, // Agregar altura
+     weight: weight
+      
     });
 
     // Asignar los tipos al Pokémon
@@ -255,11 +273,14 @@ const createPokemon = async (req, res) => {
 };
 
 
+
+
  
 
 module.exports = {
     getAllPokemons,
     getPokemonsById,
     getPokemonsByName,
-    createPokemon
+    createPokemon,
+   
 }

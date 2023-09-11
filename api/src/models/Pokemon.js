@@ -30,6 +30,26 @@ module.exports = (sequelize) => {
       allowNull: false,
 
     },
+    height : {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+
+    },
+    weight : {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+
+    }, health : {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+
+
+    },
+    speed : {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+
+    },
     types: {
       type: DataTypes.STRING,
     }
