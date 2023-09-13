@@ -1,9 +1,18 @@
+// Importa React y los hooks useState y useEffect desde la biblioteca 'react'
 import React, { useState, useEffect } from 'react';
+
+// Importa el componente Select de 'react-select'
 import Select from 'react-select';
+
+// Importa una hoja de estilo para el formulario
 import '../Styles/formstles.css';
 
+// Define un componente llamado CreatePokemonForm
 function CreatePokemonForm() {
+  // Estado para almacenar los tipos de Pokémon
   const [types, setTypes] = useState([]);
+
+  // Estado para almacenar los datos del formulario
   const [formData, setFormData] = useState({
     name: '',
     image: '',
@@ -15,8 +24,11 @@ function CreatePokemonForm() {
     weight: '',
     typeIds: [],
   });
+
+  // Estado para almacenar errores de validación del formulario
   const [errors, setErrors] = useState({});
 
+  // Efecto para cargar los tipos de Pokémon desde la API al cargar el componente
   useEffect(() => {
     async function loadTypes() {
       try {
@@ -31,6 +43,7 @@ function CreatePokemonForm() {
     loadTypes();
   }, []);
 
+  // Manejar cambios en los campos de entrada del formulario
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -39,6 +52,7 @@ function CreatePokemonForm() {
     });
   };
 
+  // Manejar cambios en la selección de tipos de Pokémon
   const handleTypeChange = (selectedOptions) => {
     const selectedTypeIds = selectedOptions.map((option) => option.value);
     setFormData({
@@ -47,6 +61,7 @@ function CreatePokemonForm() {
     });
   };
 
+  // Validar el formulario antes de enviar
   const validateForm = () => {
     const newErrors = {};
 
@@ -93,6 +108,7 @@ function CreatePokemonForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Función para validar una URL
   const isValidUrl = (url) => {
     try {
       new URL(url);
@@ -102,6 +118,7 @@ function CreatePokemonForm() {
     }
   };
 
+  // Manejar el envío del formulario
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -140,15 +157,18 @@ function CreatePokemonForm() {
     }
   };
 
+  // Crear opciones de tipo para el componente Select
   const typeOptions = types.map((type) => ({
     value: type.id,
     label: type.name,
   }));
 
+  // Renderizar el formulario
   return (
     <div className="form-container">
       <h1>Crear un nuevo Pokémon</h1>
       <form onSubmit={handleSubmit}>
+        {/* Campos de entrada del formulario con etiquetas y manejo de errores */}
         <label htmlFor="name">Nombre:</label>
         <input
           type="text"
@@ -253,6 +273,7 @@ function CreatePokemonForm() {
         <br />
 
         <label htmlFor="types">Tipo(s):</label>
+        {/* Componente Select para seleccionar tipos de Pokémon */}
         <Select
           id="types"
           name="typeIds"
@@ -272,4 +293,5 @@ function CreatePokemonForm() {
   );
 }
 
+// Exporta el componente CreatePokemonForm para su uso en otros lugares de la aplicación
 export default CreatePokemonForm;
