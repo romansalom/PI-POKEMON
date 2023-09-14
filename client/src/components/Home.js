@@ -1,7 +1,6 @@
-
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
 import Select from "react-select";
+import { connect } from "react-redux";
 import axios from "axios";
 import Cards from "./Cards";
 import {
@@ -180,7 +179,7 @@ function Home(props) {
           onClick={handleSortDirectionChange}
           className="home-sort-button"
         >
-          Orden {sortDirection === "asc" ? "De menor a mayor" : "de mayor a menor"}
+          Orden {sortDirection === "asc" ? "ascendente" : "descendente"}
         </button>
         {/* Componente Select para seleccionar la opción de ordenamiento */}
         <Select

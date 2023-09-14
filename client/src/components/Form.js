@@ -1,13 +1,7 @@
-// Importa React y los hooks useState y useEffect desde la biblioteca 'react'
+
 import React, { useState, useEffect } from 'react';
-
-// Importa el componente Select de 'react-select'
 import Select from 'react-select';
-
-// Importa una hoja de estilo para el formulario
 import '../Styles/formstles.css';
-
-// Define un componente llamado CreatePokemonForm
 function CreatePokemonForm() {
   // Estado para almacenar los tipos de Pokémon
   const [types, setTypes] = useState([]);
@@ -293,5 +287,4 @@ function CreatePokemonForm() {
   );
 }
 
-// Exporta el componente CreatePokemonForm para su uso en otros lugares de la aplicación
 export default CreatePokemonForm;
