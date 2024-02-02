@@ -9,12 +9,13 @@ const typeModel = require('./models/Type');
 
 
 const sequelize = new Sequelize(
-   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pokemon`,
+   "postgres://default:Gnui8bo6KTsR@ep-billowing-paper-a4p4b61r.us-east-1.postgres.vercel-storage.com:5432/verceldb?sslmode=require",
    {
-      logging: false, // set to console.log to see the raw SQL queries
-      native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+      logging: false,
+      native: false,
    }
 );
+
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
