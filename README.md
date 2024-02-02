@@ -14,8 +14,8 @@ Este proyecto es una oportunidad para explorar y aprender sobre el desarrollo we
 
 ## Uso
 
-Para utilizar la aplicación, simplemente accede a la URL proporcionada o clona este repositorio y sigue las instrucciones en el archivo `README` para configurar y ejecutar el proyecto localmente.
-
+Para utilizar la aplicación, simplemente accede a la URL proporcionada o clona este repositorio , luego parate en las dos carpetas y dearle npm i. 
+una vez insatladas las dependecias npm start y npm run dev
 ## Contribución
 
 ¡Si deseas contribuir o realizar mejoras en este proyecto, tu colaboración es bienvenida! Siéntete libre de hacer un fork del repositorio, realizar tus cambios y presentar una solicitud de extracción.
